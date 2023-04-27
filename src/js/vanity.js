@@ -8,7 +8,7 @@
  const secp256k1 = require('secp256k1');//导入模块
  const keccak = require('keccak');
  const randomBytes = require('randombytes');
- //const fs = require('fs');
+ 
  const step = 500;
  
  
@@ -48,15 +48,18 @@
  
      const subStr1 = address.substr(0, input1.length);
      const subStr2 = address.substr(40 - input2.length, );
-     if (isChecksum) {
+
+ 
+     if (!isChecksum) {
          if (input1 === subStr1) {
              return input2 === subStr2;
          }
      }
-     else if (input1.toLowerCase() === subStr1.toLowerCase()) {
-         return input2.toLowerCase() == subStr2.toLowerCase();
+     if (input1.toLowerCase() === subStr1) {
+         if (input2.toLowerCase() == subStr2) {
+             return true;
          }
-     
+     }
      return false;
  };
  /**
@@ -119,47 +122,20 @@
      const input = event.data;
      
      try {
-         let arr = input.add_1.split('\n');
-         let _result = new Array();
+         let arr = input.add_1.split(',');
+         
          arr.forEach((element) => {
              const addr = element.trim();
              getVanityWallet2(addr, input.hex_1, input.hex_2, input.checksum, (message) => {
-                //self.postMessage({ address: message });
-                
-                _result.push(message);
+                postMessage(message)
              });
          });
-         self.postMessage({ address: _result });
 
+    
      } catch (err) {
          self.postMessage({ error: err.toString() });
      }};
-
-// onmessage = function (event) {
-//     const input = event.data;
-  
-//     try {
-//       let arr = input.add_1.split('\n');
-//       let _result = new Array();
-//       arr.forEach((element) => {
-//         const addr = element.trim();
-//         getVanityWallet2(addr, input.hex_1, input.hex_2, input.checksum, (message) => {
-//           _result.push(message);
-//           // 将结果写入文件
-//           const resultStr = `${addr}: ${message}\n`;
-//           //writeToLogFile(resultStr);
-//           // 发送结果到主线程进行实时显示
-//           self.postMessage({ address: resultStr });
-//         });
-//       });
-//       // 等待所有异步操作完成后再将结果发送到主线程
-//       Promise.all(_result).then(() => {
-//         self.postMessage({ address: _result.join('\n') });
-//       });
-//     } catch (err) {
-//       self.postMessage({ error: err.toString() });
-//     }
-//   };
+ 
 module.exports = {
     onmessage
 };

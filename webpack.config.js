@@ -42,7 +42,8 @@ module.exports = {
                 test: /\.(png|woff|woff2)/,
                 exclude: /node_modules/,
                 loader: 'url-loader'
-            }
+            },
+        
         ]
     },
     resolve: {

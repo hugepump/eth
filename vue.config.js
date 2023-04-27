@@ -24,13 +24,13 @@ module.exports = {
             })
             // .devtool('source-map')
             .end();
-        config.module.rule('js').exclude.add(/vanity\.js$/)
+            config.module.rule('js').exclude.add(/vanity\.js$/)
             config.module
             .rule('babel-worker')
             .test(/vanity\.js$/)
             .use('babel-loader')
             .loader('babel-loader')
-            .end(); 															   						 								 																								 					
+            .end(); 
     },
     configureWebpack: {
         devtool: 'source-map',

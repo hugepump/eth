@@ -40,13 +40,13 @@
             <!--Result-->
             <div class="row">
                 <div class="col-md-12">
-                    <result :result="result"></result>
+                    <result :result="result_out"></result>
                 </div>
             </div>
         </div>
 
         <!--Save modal-->
-        <save :result="result"></save>
+        <save :result="result_out"></save>
 
         <!--Footer-->
         <foot></foot>
@@ -76,8 +76,10 @@
                 status: 'Waiting',
                 workers: [],
                 threads: 1,
+                addr_num: 0,
                 cores: 0,
                 result1: { address: '', privateKey: '' },
+                result_out: [],
                 input: { len_1: '', len_2:'',add_1:'',checksum: true },
                 firstTick: null,
                 error: null,
@@ -113,21 +115,8 @@
                 }
             },
 
-            displayResult: function (result1) {
-                let _address = result1.filter(item => "address" in item )
-                console.log("_address",_address)
-
-                this.result = _address;
-                console.log("result _address",this.result)
-
-                if ("attempts" in result1){
-                    this.$emit('increment-counter', result1.attempts);
-                } else {
-                    result1.length > 1 ? this.$emit('increment-counter', result1[result1.length-1].attempts): ""
-                    ;
-                }
-                // this.result1.address = result1.address;
-                // this.result1.privateKey = result1.privKey;
+            displayResult: function (address) {
+                this.$emit('increment-counter', address.attempts);
                 this.status = 'Address found';
             },
 
@@ -179,9 +168,11 @@
                 }
 
                 if (wallet.address) {
-                    this.stopGen();
-                    console.log(wallet.address)
-                    return this.displayResult(wallet.address);
+                    this.result_out.push(wallet)
+                    if(this.result_out.length == this.addr_num){
+                        this.stopGen();
+                        return this.displayResult(this.result_out);
+                    }
                 }
                 this.$emit('increment-counter', wallet.attempts);
             },
@@ -197,6 +188,9 @@
                 this.running = true;
 
                 for (let w = 0; w < this.workers.length; w++) {
+                    if(this.input.add_1){
+                        this.addr_num = this.input.add_1.split(",").length
+                    }
                     this.workers[w].postMessage(this.input);
                 }
 
@@ -224,7 +218,7 @@
                 }
 
                 if (cores) {
-                    this.cores = 1;
+                    this.cores = cores;
                     this.threads = this.cores;
                 }
             },

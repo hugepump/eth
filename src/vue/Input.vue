@@ -12,7 +12,7 @@
             <!--添加新的输入框输入后缀-->
             <div class="error-text">Numbers and letters from A to F only</div>
             <textarea class="text-input-large" id="add_1" placeholder="输入ETH地址,每行一个" v-model="add_1"
-                :disabled="running" style="height: 800px;font-size:17px"></textarea>
+                :disabled="running"></textarea>
             <!--添加结束-->
             <div class="row justify-content-center hide-render">
                 <div class="spinner">
@@ -29,7 +29,7 @@
                     <label class="checkbox">
                         <input type="checkbox" name="checkbox" checked="" v-model="checksum" :disabled="running" />
                         <i class="left"> </i>
-                        区分大小写
+                        Case-sensitive
                     </label>
                 </div>
                 <!--选择前后缀，取消-->
